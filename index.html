@@ -364,7 +364,7 @@ button:disabled{opacity:.5;cursor:default}
 
   // ---- RSVP ----
   // Supabase project URL + anon (public) key. Leave empty for preview mode: entries stay on this phone only.
-  var RSVP={url:"",key:""};
+  var RSVP={url:"https://jainfeowohzqbamlsfvv.supabase.co",key:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImphaW5mZW93b2h6cWJhbWxzZnZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1NzczOTMsImV4cCI6MjEwODE1MzM5M30.lxrAUoYkoPIEBmuW-8FJkBI9yRRXwvyhwoNEZkQu3tA"};
   var LS_KEY='cave_rsvp_v1';
   function lsGet(k){try{return JSON.parse(localStorage.getItem(k));}catch(e){return null;}}
   function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
