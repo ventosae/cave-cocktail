@@ -32,7 +32,7 @@
   color-scheme:dark;
 }
 [hidden]{display:none!important}
-html{height:100%}
+html{height:100%;overflow-x:hidden}
 body{
   box-sizing:border-box;min-height:100%;margin:0;background:var(--bg);color:var(--cream);font-family:var(--sans);
   padding-left:max(16px,env(safe-area-inset-left,0px));
@@ -58,7 +58,7 @@ body{
 }
 /* backface-visibility on the side only. Do not add it to the children: Android Chrome then drops the B side when the spin stops. */
 .side{
-  position:absolute;inset:0;border-radius:50%;
+  position:absolute;inset:0;border-radius:50%;overflow:hidden; /* clip the rotating square to the circle so it never widens the page */
   backface-visibility:hidden;-webkit-backface-visibility:hidden;
   box-shadow:0 40px 60px rgba(0,0,0,.6);will-change:transform;
 }
