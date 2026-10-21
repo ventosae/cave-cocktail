@@ -372,8 +372,10 @@ button:disabled{opacity:.5;cursor:default}
     return fetch(RSVP.url+'/rest/v1/'+path,{method:'POST',headers:{
       'apikey':RSVP.key,'Authorization':'Bearer '+RSVP.key,'Content-Type':'application/json','Prefer':prefer||'return=minimal'},
       body:JSON.stringify(body)}).then(function(r){
-        if(!r.ok)return r.text().then(function(t){throw new Error(t||r.status);});
-        return r.status===204?null:r.json();
+        return r.text().then(function(t){
+          if(!r.ok){var m=t;try{m=JSON.parse(t).message||t;}catch(e){} throw new Error('HTTP '+r.status+' '+m);}
+          return t?JSON.parse(t):null;   // a successful insert comes back with an empty body
+        });
       });
   }
   var connected=!!(RSVP.url&&RSVP.key);
@@ -426,7 +428,7 @@ button:disabled{opacity:.5;cursor:default}
     var done=function(){lsSet(LS_KEY+'_me',{name:name});markDone(name);loadCount();};
     if(!connected){var local=lsGet(LS_KEY)||[];local.push(entry);lsSet(LS_KEY,local);done();return;}
     api('rsvps',entry).then(done).catch(function(err){
-      btn.disabled=false;rsvpMsg.className='msg err';rsvpMsg.textContent='That did not go through. Try again, or message the host.';
+      btn.disabled=false;rsvpMsg.className='msg err';rsvpMsg.textContent='That did not go through ('+String(err.message||err).slice(0,120)+'). Try again, or message the host.';
     });
   });
 
@@ -450,7 +452,7 @@ button:disabled{opacity:.5;cursor:default}
     api('rpc/guest_list',{pass:pass},'return=representation').then(function(rows){
       if(!rows||!rows.length){gm.className='msg err';gm.textContent='Nothing came back. Wrong passphrase, or no RSVPs yet.';return;}
       gm.className='msg';render(rows);
-    }).catch(function(){gm.className='msg err';gm.textContent='Could not load the list.';});
+    }).catch(function(err){gm.className='msg err';gm.textContent='Could not load the list ('+String(err.message||err).slice(0,120)+').';});
   });
 
   applyTilt();
