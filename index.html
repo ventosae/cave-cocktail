@@ -390,14 +390,9 @@ button:disabled{opacity:.5;cursor:default}
   var guestsPanel=document.getElementById('guests');
   rsvpNote.textContent=connected?'Your name and food notes go only to the host.':'Preview · guest list not connected yet · saved on this device only';
 
-  function loadCount(){
-    if(!connected){
-      var local=lsGet(LS_KEY)||[];drawSeats(ACCEPTED+local.length,SEATS);return;
-    }
-    api('rpc/seat_count',{},'return=representation').then(function(d){
-      if(d&&typeof d.taken==='number')drawSeats(d.taken,SEATS);   // the label always claims 13 seats
-    }).catch(function(){});
-  }
+  // The seat count is hard-coded on purpose (18 of 13, the over-capacity joke).
+  // RSVPs still save to the guest list; they just do not move the label.
+  function loadCount(){ drawSeats(ACCEPTED,SEATS); }
   loadCount();
 
   function showPanel(which){
