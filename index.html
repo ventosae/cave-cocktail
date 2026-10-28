@@ -153,7 +153,7 @@ button:disabled{opacity:.5;cursor:default}
    <div class="side a">
     <div class="disc" data-disc>
      <div class="label">
-      <svg viewBox="0 0 300 300" role="img" aria-label="Side A: Collingwood Cave Cocktail. Halloween, Saturday 31 October. 1/36 Bedford Street, Collingwood. 8pm till impossibly late. House music with Russian taste and Bengali flavours. 13 of 18 seats taken.">
+      <svg viewBox="0 0 300 300" role="img" aria-label="Side A: Collingwood Cave Cocktail. Halloween, Saturday 31 October. 1/36 Bedford Street, Collingwood. 8pm till impossibly late. House music with Russian taste and Bengali flavours. 18 of 13 seats taken.">
        <defs><path id="rimA" d="M150,150 m-138,0 a138,138 0 1,1 276,0 a138,138 0 1,1 -276,0"/></defs>
        <text class="rim"><textPath href="#rimA">You Are Invited Records · CCR-031 · Halloween 2026 · 33⅓ rpm · Stereo · Side A · You Are Invited Records · CCR-031 · Halloween 2026 · 33⅓ rpm · Stereo · Side A ·</textPath></text>
        <g id="seatring" transform="translate(150 150)"></g>
@@ -171,7 +171,7 @@ button:disabled{opacity:.5;cursor:default}
         <line class="hr" x1="-16" x2="16" y1="210" y2="210"/>
         <text class="body" y="224">House music with Russian taste</text>
         <text class="body" y="237">and Bengali flavours</text>
-        <text class="small" y="256" id="seatText">13 of 18 seats taken</text>
+        <text class="small" y="256" id="seatText">18 of 13 seats taken</text>
        </g>
       </svg>
       <div class="hole"></div>
@@ -222,7 +222,7 @@ button:disabled{opacity:.5;cursor:default}
 <audio id="track" preload="metadata"></audio>
 
 <section class="panel" id="rsvp" hidden aria-labelledby="rsvpTitle">
-  <div><h2 id="rsvpTitle">Take a seat</h2><p id="rsvpIntro">13 of 18 seats taken. Your name goes on the list and the counter on the label moves.</p></div>
+  <div><h2 id="rsvpTitle">Take a seat</h2><p id="rsvpIntro">18 of 13 seats taken. Your name goes on the list and the counter on the label moves.</p></div>
   <form id="rsvpForm" novalidate>
     <div class="field"><label for="fName">Your name</label><input id="fName" name="name" autocomplete="name" maxlength="60" required></div>
     <div class="field"><span class="lbl" id="dietLbl">Dietary requirements</span>
@@ -254,7 +254,7 @@ button:disabled{opacity:.5;cursor:default}
 <script>
 (function(){
   // ---- seats (live from the guest list when RSVP is connected) ----
-  var ACCEPTED=13,SEATS=18;
+  var ACCEPTED=18,SEATS=13; // over capacity on purpose
   var ring=document.getElementById('seatring');
   function drawSeats(taken,seats){
     while(ring.firstChild)ring.removeChild(ring.firstChild);
@@ -264,10 +264,10 @@ button:disabled{opacity:.5;cursor:default}
       c.setAttribute('cx',(Math.cos(a)*r).toFixed(2));c.setAttribute('cy',(Math.sin(a)*r).toFixed(2));c.setAttribute('r','2.4');
       c.setAttribute('class','seat'+(i<taken?' on':''));ring.appendChild(c);
     }
-    var txt=Math.min(taken,seats)+' of '+seats+' seats taken'+(taken>=seats?' · full':'');
+    var txt=taken+' of '+seats+' seats taken';   // allowed to exceed capacity: it's the joke
     document.getElementById('seatText').textContent=txt;
-    document.getElementById('rsvpIntro').textContent=(taken>=seats
-      ?'The cave is full. Put your name down and you go on the waiting list.'
+    document.getElementById('rsvpIntro').textContent=(taken>seats
+      ?txt+'. The cave is over capacity. Squeeze in anyway.'
       :txt+'. Your name goes on the list and the counter on the label moves.');
   }
   drawSeats(ACCEPTED,SEATS);
@@ -395,7 +395,7 @@ button:disabled{opacity:.5;cursor:default}
       var local=lsGet(LS_KEY)||[];drawSeats(ACCEPTED+local.length,SEATS);return;
     }
     api('rpc/seat_count',{},'return=representation').then(function(d){
-      if(d&&typeof d.taken==='number')drawSeats(d.taken,d.seats||SEATS);
+      if(d&&typeof d.taken==='number')drawSeats(d.taken,SEATS);   // the label always claims 13 seats
     }).catch(function(){});
   }
   loadCount();

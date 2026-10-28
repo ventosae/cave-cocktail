@@ -12,12 +12,12 @@ create table if not exists public.rsvps (
 
 create table if not exists public.settings (
   id              int primary key default 1 check (id = 1),
-  seats           int not null default 18,
+  seats           int not null default 99,  -- real cap before the waiting list; the label always claims 13
   base_taken      int not null default 1,   -- yeses you already have outside the site; set to 0 once they are in the table
   organiser_pass  text not null
 );
 insert into public.settings (id, seats, base_taken, organiser_pass)
-values (1, 18, 1, 'change-me') on conflict (id) do nothing;
+values (1, 99, 1, 'change-me') on conflict (id) do nothing;
 
 -- Row level security: the public key may only INSERT an RSVP. Nobody can read, edit or delete through the API.
 alter table public.rsvps    enable row level security;
